@@ -19,9 +19,15 @@
   --streak: #ffcf75;
   --danger: #ff8a9b;
 
-  /* Forma */
+  /* Versiones translúcidas para brillos y degradados */
+  --accent-tint: rgba(94, 234, 212, 0.14);
+  --accent-glow: rgba(94, 234, 212, 0.3);
+  --primary-tint: rgba(122, 167, 255, 0.08);
+
+  /* Forma y tipografía */
   --radius: 16px;
-  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Nunito Variable', system-ui, sans-serif;
+  --font-heading: 'Quicksand Variable', 'Nunito Variable', system-ui, sans-serif;
 }
 
 *,
@@ -33,9 +39,17 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: var(--font);
+  font-family: var(--font-body);
   line-height: 1.5;
   color: var(--text);
   background: radial-gradient(1200px 600px at 50% -10%, #1b2c52 0%, var(--bg) 60%);
   background-attachment: fixed;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
