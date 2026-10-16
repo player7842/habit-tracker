@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { env } from '../../config/env';
 import { AppError } from '../../errors/app-error';
-import { createUser, findUserByEmail } from './auth.repository';
+import { createUser, findUserByEmail, findUserById } from './auth.repository';
 import type { LoginInput, RegisterInput } from './auth.schemas';
 
 const SALT_ROUNDS = 12;
@@ -49,5 +49,20 @@ export async function loginUser(input: LoginInput) {
   return {
     token,
     user: { id: user.id, email: user.email, displayName: user.display_name },
+  };
+}
+
+export async function getCurrentUser(userId: string) {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AppError(401, 'Sesión inválida o expirada');
+  }
+
+  return {
+    id: user.id,
+    email: user.email,
+    displayName: user.display_name,
+    createdAt: user.created_at,
   };
 }
