@@ -1,0 +1,105 @@
+.button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    border-color 0.2s ease,
+    background 0.3s ease;
+}
+
+.button:hover:not(:disabled):not(.checked) {
+  border-color: var(--primary);
+  transform: scale(1.06);
+}
+
+.button:active:not(:disabled):not(.checked) {
+  transform: scale(0.94);
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: var(--on-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+}
+
+.checked {
+  border-color: var(--accent);
+  background: var(--accent);
+  cursor: default;
+  animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.checked .icon {
+  animation: draw 0.35s 0.1s ease forwards;
+}
+
+.checked::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: ring 0.7s ease-out forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.8);
+  }
+  60% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ring {
+  from {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .checked,
+  .checked::after {
+    animation: none;
+    transition: none;
+  }
+
+  .checked .icon {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
