@@ -1,9 +1,12 @@
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { env } from '../../config/env';
 import { AppError } from '../../errors/app-error';
-import { createUser } from './auth.repository';
-import type { RegisterInput } from './auth.schemas';
+import { createUser, findUserByEmail } from './auth.repository';
+import type { LoginInput, RegisterInput } from './auth.schemas';
 
 const SALT_ROUNDS = 12;
+const TOKEN_EXPIRATION = '7d';
 
 export async function registerUser(input: RegisterInput) {
   const passwordHash = await bcrypt.hash(input.password, SALT_ROUNDS);
@@ -26,4 +29,25 @@ export async function registerUser(input: RegisterInput) {
     }
     throw error;
   }
+}
+
+export async function loginUser(input: LoginInput) {
+  const user = await findUserByEmail(input.email.toLowerCase());
+
+  const passwordMatches = user
+    ? await bcrypt.compare(input.password, user.password_hash)
+    : false;
+
+  if (!user || !passwordMatches) {
+    throw new AppError(401, 'Correo o contraseña incorrectos');
+  }
+
+  const token = jwt.sign({ sub: user.id }, env.jwtSecret, {
+    expiresIn: TOKEN_EXPIRATION,
+  });
+
+  return {
+    token,
+    user: { id: user.id, email: user.email, displayName: user.display_name },
+  };
 }

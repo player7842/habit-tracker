@@ -1,18 +1,16 @@
 import type { Request, Response } from 'express';
-import { AppError } from '../../errors/app-error';
-import { registerSchema } from './auth.schemas';
-import { registerUser } from './auth.service';
+import { parseOrThrow } from '../../utils/validate';
+import { loginSchema, registerSchema } from './auth.schemas';
+import { loginUser, registerUser } from './auth.service';
 
 export async function register(req: Request, res: Response) {
-  const parsed = registerSchema.safeParse(req.body);
-
-  if (!parsed.success) {
-    const message = parsed.error.issues
-      .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
-      .join('. ');
-    throw new AppError(400, message);
-  }
-
-  const user = await registerUser(parsed.data);
+  const input = parseOrThrow(registerSchema, req.body);
+  const user = await registerUser(input);
   res.status(201).json({ user });
+}
+
+export async function login(req: Request, res: Response) {
+  const input = parseOrThrow(loginSchema, req.body);
+  const result = await loginUser(input);
+  res.json(result);
 }

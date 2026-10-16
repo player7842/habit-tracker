@@ -20,3 +20,19 @@ export async function createUser(
   );
   return result.rows[0];
 }
+
+export interface UserWithPasswordRow extends UserRow {
+  password_hash: string;
+}
+
+export async function findUserByEmail(
+  email: string,
+): Promise<UserWithPasswordRow | undefined> {
+  const result = await pool.query<UserWithPasswordRow>(
+    `SELECT id, email, display_name, created_at, password_hash
+     FROM users
+     WHERE email = $1`,
+    [email],
+  );
+  return result.rows[0];
+}
