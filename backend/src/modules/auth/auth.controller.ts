@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { parseOrThrow } from '../../utils/validate';
 import { loginSchema, registerSchema } from './auth.schemas';
-import { loginUser, registerUser } from './auth.service';
+import { getCurrentUser, loginUser, registerUser } from './auth.service';
 
 export async function register(req: Request, res: Response) {
   const input = parseOrThrow(registerSchema, req.body);
@@ -13,4 +13,9 @@ export async function login(req: Request, res: Response) {
   const input = parseOrThrow(loginSchema, req.body);
   const result = await loginUser(input);
   res.json(result);
+}
+
+export async function me(_req: Request, res: Response) {
+  const user = await getCurrentUser(res.locals.userId);
+  res.json({ user });
 }
