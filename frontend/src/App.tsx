@@ -9,10 +9,12 @@ export default function App() {
     <main className="demo">
       <h1>Habit Tracker</h1>
 
-      <div className="demo-card">
+      <div className={`demo-card ${done ? 'demo-card--done' : ''}`}>
         <div>
           <p className="demo-title">Tender la cama</p>
-          <p className="demo-muted">Hasta las 10:00 a. m.</p>
+          <p className={`demo-status ${done ? 'demo-status--done' : ''}`}>
+            {done ? '¡Cumplido hoy!' : 'Hasta las 10:00 a. m.'}
+          </p>
         </div>
 
         <CheckButton
