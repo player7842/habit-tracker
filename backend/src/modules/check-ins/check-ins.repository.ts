@@ -54,3 +54,60 @@ export async function listDoneDates(habitId: string): Promise<string[]> {
   );
   return result.rows.map((row) => row.check_date);
 }
+
+export interface TodayHabitRow {
+  id: string;
+  name: string;
+  deadline_time: string | null;
+  past_deadline: boolean;
+}
+
+export async function getLocalDate(userId: string): Promise<string | undefined> {
+  const result = await pool.query<{ local_date: string }>(
+    `SELECT (now() AT TIME ZONE timezone)::date::text AS local_date
+     FROM users
+     WHERE id = $1`,
+    [userId],
+  );
+  return result.rows[0]?.local_date;
+}
+
+export async function listHabitsForToday(
+  userId: string,
+): Promise<TodayHabitRow[]> {
+  const result = await pool.query<TodayHabitRow>(
+    `SELECT h.id,
+            h.name,
+            h.deadline_time,
+            (h.deadline_time IS NOT NULL
+              AND (now() AT TIME ZONE u.timezone)::time > h.deadline_time
+            ) AS past_deadline
+     FROM habits h
+     JOIN users u ON u.id = h.user_id
+     WHERE h.user_id = $1 AND h.is_active = TRUE
+     ORDER BY h.created_at`,
+    [userId],
+  );
+  return result.rows;
+}
+
+export async function listDoneDatesByHabit(
+  userId: string,
+): Promise<Map<string, string[]>> {
+  const result = await pool.query<{ habit_id: string; check_date: string }>(
+    `SELECT c.habit_id, c.check_date::text AS check_date
+     FROM check_ins c
+     JOIN habits h ON h.id = c.habit_id
+     WHERE h.user_id = $1 AND h.is_active = TRUE AND c.status = 'done'
+     ORDER BY c.check_date DESC`,
+    [userId],
+  );
+
+  const byHabit = new Map<string, string[]>();
+  for (const row of result.rows) {
+    const dates = byHabit.get(row.habit_id) ?? [];
+    dates.push(row.check_date);
+    byHabit.set(row.habit_id, dates);
+  }
+  return byHabit;
+}

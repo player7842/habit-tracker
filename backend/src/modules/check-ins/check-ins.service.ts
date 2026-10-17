@@ -1,8 +1,11 @@
 import { AppError } from '../../errors/app-error';
 import {
   findHabitContext,
+  getLocalDate,
   insertCheckIn,
   listDoneDates,
+  listDoneDatesByHabit,
+  listHabitsForToday,
 } from './check-ins.repository';
 
 function previousDay(date: string): string {
@@ -64,5 +67,36 @@ export async function getHabitProgress(habitId: string, userId: string) {
     today: habit.local_date,
     doneDates,
     currentStreak: calculateCurrentStreak(doneDates, habit.local_date),
+  };
+}
+
+export async function getTodayOverview(userId: string) {
+  const [today, habits, doneByHabit] = await Promise.all([
+    getLocalDate(userId),
+    listHabitsForToday(userId),
+    listDoneDatesByHabit(userId),
+  ]);
+
+  if (!today) {
+    throw new AppError(401, 'Sesión inválida o expirada');
+  }
+
+  return {
+    today,
+    habits: habits.map((habit) => {
+      const doneDates = doneByHabit.get(habit.id) ?? [];
+      const doneToday = doneDates.includes(today);
+
+      return {
+        id: habit.id,
+        name: habit.name,
+        deadlineTime: habit.deadline_time
+          ? habit.deadline_time.slice(0, 5)
+          : null,
+        doneToday,
+        canCheckIn: !doneToday && !habit.past_deadline,
+        currentStreak: calculateCurrentStreak(doneDates, today),
+      };
+    }),
   };
 }
