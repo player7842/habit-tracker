@@ -86,4 +86,37 @@ describe('check-ins', () => {
       .set(auth(token));
     expect(afterToday.body.currentStreak).toBe(3);
   });
+  
+  it('devuelve el resumen de hoy con estado y racha de cada hábito', async () => {
+    const token = await createUserAndLogin();
+    const readingId = await createHabit(token, { name: 'Leer' });
+    await createHabit(token, { name: 'Madrugar', deadlineTime: '00:00' });
+
+    await request(app)
+      .post(`/api/habits/${readingId}/check-ins`)
+      .set(auth(token));
+
+    const res = await request(app).get('/api/habits/today').set(auth(token));
+
+    expect(res.status).toBe(200);
+    expect(res.body.habits).toHaveLength(2);
+
+    const reading = res.body.habits.find(
+      (habit: { name: string }) => habit.name === 'Leer',
+    );
+    const early = res.body.habits.find(
+      (habit: { name: string }) => habit.name === 'Madrugar',
+    );
+
+    expect(reading).toMatchObject({
+      doneToday: true,
+      canCheckIn: false,
+      currentStreak: 1,
+    });
+    expect(early).toMatchObject({
+      doneToday: false,
+      canCheckIn: false,
+      currentStreak: 0,
+    });
+  });
 });
