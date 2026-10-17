@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { Link } from 'react-router';
 import { ApiError } from '../api/client';
+import { AuthForm } from '../components/AuthForm/AuthForm';
+import { Field } from '../components/Field/Field';
 import { useAuth } from '../features/auth/useAuth';
-import styles from './AuthPage.module.css';
 
 export function LoginPage() {
   const { signIn } = useAuth();
@@ -22,49 +24,42 @@ export function LoginPage() {
       setError(
         err instanceof ApiError ? err.message : 'Algo salió mal. Intenta de nuevo.',
       );
-    } finally {
       setIsSubmitting(false);
     }
   }
 
   return (
-    <main className={styles.page}>
-      <form className={styles.card} onSubmit={handleSubmit}>
-        <h1 className={styles.title}>Habit Tracker</h1>
-        <p className={styles.subtitle}>Inicia sesión para continuar</p>
-
-        <label className={styles.field}>
-          <span>Correo</span>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-            required
-          />
-        </label>
-
-        <label className={styles.field}>
-          <span>Contraseña</span>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="current-password"
-            required
-          />
-        </label>
-
-        {error && (
-          <p className={styles.error} role="alert">
-            {error}
-          </p>
-        )}
-
-        <button className={styles.submit} type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Entrando…' : 'Entrar'}
-        </button>
-      </form>
-    </main>
+    <AuthForm
+      title="¡Qué bueno verte!"
+      subtitle="Inicia sesión y sigue con tu racha"
+      submitLabel="Entrar"
+      isSubmitting={isSubmitting}
+      error={error}
+      onSubmit={handleSubmit}
+      footer={
+        <>
+          ¿Aún no tienes cuenta? <Link to="/register">Crea una</Link>
+        </>
+      }
+    >
+      <Field
+        label="Correo"
+        type="email"
+        placeholder="tucorreo@ejemplo.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        autoComplete="email"
+        required
+      />
+      <Field
+        label="Contraseña"
+        type="password"
+        placeholder="Tu contraseña"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        autoComplete="current-password"
+        required
+      />
+    </AuthForm>
   );
 }

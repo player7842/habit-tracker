@@ -21,3 +21,10 @@ export function login(email: string, password: string) {
 export function fetchCurrentUser(token: string) {
   return apiRequest<{ user: User }>('/auth/me', { token });
 }
+
+export function register(email: string, password: string, displayName: string) {
+  return apiRequest<{ user: User }>('/auth/register', {
+    method: 'POST',
+    body: { email, password, displayName },
+  });
+}
