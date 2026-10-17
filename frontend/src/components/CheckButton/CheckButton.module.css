@@ -2,6 +2,7 @@
   position: relative;
   display: grid;
   place-items: center;
+  flex-shrink: 0;
   width: 56px;
   height: 56px;
   border: 2px solid var(--border-strong);
@@ -28,6 +29,11 @@
   outline-offset: 3px;
 }
 
+.button:disabled:not(.checked) {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .icon {
   width: 28px;
   height: 28px;
@@ -40,18 +46,28 @@
   stroke-dashoffset: 24;
 }
 
+/* Estado final: cumplido (se ve así al cargar la página) */
 .checked {
   border-color: var(--accent);
   background: var(--accent);
   cursor: default;
-  animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 
 .checked .icon {
+  stroke-dashoffset: 0;
+}
+
+/* Animación: solo cuando se acaba de cumplir */
+.celebrating {
+  animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.celebrating .icon {
+  stroke-dashoffset: 24;
   animation: draw 0.35s 0.1s ease forwards;
 }
 
-.checked::after {
+.celebrating::after {
   content: '';
   position: absolute;
   inset: -2px;
@@ -91,14 +107,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button,
-  .checked,
-  .checked::after {
-    animation: none;
+  .button {
     transition: none;
   }
 
-  .checked .icon {
+  .celebrating,
+  .celebrating::after {
+    animation: none;
+  }
+
+  .celebrating .icon {
     animation: none;
     stroke-dashoffset: 0;
   }

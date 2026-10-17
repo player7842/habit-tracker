@@ -1,0 +1,27 @@
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+
+.active {
+  color: var(--streak);
+}
+
+.flame {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.active .flame {
+  fill: rgba(255, 207, 117, 0.25);
+}

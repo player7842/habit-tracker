@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
 import styles from './CheckButton.module.css';
+import { useJustTurnedOn } from '../../hooks/useJustTurnedOn';
 
 interface CheckButtonProps {
   checked: boolean;
@@ -17,6 +18,7 @@ export function CheckButton({
 }: CheckButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [pending, setPending] = useState(false);
+  const celebrating = useJustTurnedOn(checked);
 
   async function handleClick() {
     if (checked || disabled || pending) return;
@@ -59,7 +61,7 @@ export function CheckButton({
     <button
       ref={buttonRef}
       type="button"
-      className={`${styles.button} ${checked ? styles.checked : ''}`}
+            className={`${styles.button} ${checked ? styles.checked : ''} ${celebrating ? styles.celebrating : ''}`}
       onClick={handleClick}
       disabled={disabled}
       aria-pressed={checked}
