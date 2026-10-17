@@ -3,6 +3,7 @@ import type { User } from '../../api/auth';
 
 export interface AuthContextValue {
   user: User | null;
+  token: string | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
