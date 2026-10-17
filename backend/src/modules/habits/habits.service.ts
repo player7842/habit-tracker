@@ -14,6 +14,7 @@ function toHabitResponse(habit: HabitRow) {
     templateId: habit.template_id,
     name: habit.name,
     deadlineTime: habit.deadline_time ? habit.deadline_time.slice(0, 5) : null,
+    goalDays: habit.goal_days,
     createdAt: habit.created_at,
   };
 }
@@ -47,6 +48,8 @@ export async function addHabit(userId: string, input: CreateHabitInput) {
     template?.id ?? null,
     name,
     input.deadlineTime ?? null,
+    input.goalDays ?? null,
   );
+
   return toHabitResponse(habit);
 }

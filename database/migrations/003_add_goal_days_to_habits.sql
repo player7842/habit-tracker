@@ -1,0 +1,2 @@
+ALTER TABLE habits
+  ADD COLUMN goal_days INTEGER CHECK (goal_days BETWEEN 2 AND 365);

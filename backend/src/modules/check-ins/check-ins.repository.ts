@@ -60,6 +60,7 @@ export interface TodayHabitRow {
   name: string;
   deadline_time: string | null;
   past_deadline: boolean;
+  goal_days: number | null;
 }
 
 export async function getLocalDate(userId: string): Promise<string | undefined> {
@@ -79,6 +80,7 @@ export async function listHabitsForToday(
     `SELECT h.id,
             h.name,
             h.deadline_time,
+            h.goal_days,
             (h.deadline_time IS NOT NULL
               AND (now() AT TIME ZONE u.timezone)::time > h.deadline_time
             ) AS past_deadline
