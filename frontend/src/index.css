@@ -18,6 +18,10 @@
   --accent: #5eead4;
   --streak: #ffcf75;
   --danger: #ff8a9b;
+  /* Bordes inferiores de los botones "gorditos" y texto de apoyo */
+  --primary-shadow: #4a7bd6;
+  --accent-shadow: #35a898;
+  --text-faint: #7d8fb3;
 
   /* Versiones translúcidas para brillos y degradados */
   --accent-tint: rgba(94, 234, 212, 0.14);
@@ -52,4 +56,11 @@ h3 {
   font-family: var(--font-heading);
   font-weight: 700;
   letter-spacing: -0.01em;
+}
+
+.loading-screen {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  color: var(--text-muted);
 }

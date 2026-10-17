@@ -1,0 +1,101 @@
+.page {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 420px;
+  padding: 36px 28px 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  animation: rise 0.5s ease-out;
+}
+
+.brand {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 8px;
+  background: linear-gradient(135deg, var(--accent), var(--primary));
+  border-radius: 20px;
+  box-shadow:
+    0 4px 0 var(--accent-shadow),
+    0 0 32px var(--accent-glow);
+}
+
+.brand svg {
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: var(--on-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.7rem;
+  text-align: center;
+}
+
+.subtitle {
+  margin: 0 0 16px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.error {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: var(--danger);
+  background: rgba(255, 138, 155, 0.1);
+  border: 1px solid rgba(255, 138, 155, 0.35);
+  border-radius: 12px;
+}
+
+.footer {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.footer a {
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+}
