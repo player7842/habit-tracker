@@ -42,10 +42,51 @@
   min-width: 0;
 }
 
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .title {
+  min-width: 0;
   margin: 0;
   font-size: 1.1rem;
   overflow-wrap: anywhere;
+}
+
+.archive {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-top: -4px;
+  color: var(--text-faint);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.archive:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.archive:focus-visible {
+  outline: 3px solid var(--primary);
+}
+
+.archive svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .status {

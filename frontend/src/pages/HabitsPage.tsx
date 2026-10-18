@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ApiError } from '../api/client';
+import type { TodayHabit } from '../api/habits';
 import { Button } from '../components/Button/Button';
+import { ConfirmDialog } from '../components/ConfirmDialog/ConfirmDialog';
 import { HabitCard } from '../components/HabitCard/HabitCard';
 import { useAuth } from '../features/auth/useAuth';
-import { useCheckInMutation, useTodayQuery } from '../features/habits/useHabits';
+import {
+  useArchiveHabitMutation,
+  useCheckInMutation,
+  useTodayQuery,
+} from '../features/habits/useHabits';
 import { formatLongDate } from '../utils/time';
 import styles from './HabitsPage.module.css';
 
@@ -13,7 +19,9 @@ export function HabitsPage() {
   const { user, signOut } = useAuth();
   const { data, isPending, isError, error, refetch } = useTodayQuery();
   const checkIn = useCheckInMutation();
+  const archive = useArchiveHabitMutation();
   const [notice, setNotice] = useState<string | null>(null);
+  const [habitToArchive, setHabitToArchive] = useState<TodayHabit | null>(null);
 
   useEffect(() => {
     if (error instanceof ApiError && error.status === 401) {
@@ -32,6 +40,23 @@ export function HabitsPage() {
           : 'No se pudo registrar el hábito. Intenta de nuevo.',
       );
       throw err;
+    }
+  }
+
+  async function confirmArchive() {
+    if (!habitToArchive) return;
+
+    try {
+      await archive.mutateAsync(habitToArchive.id);
+      setNotice(null);
+    } catch (err) {
+      setNotice(
+        err instanceof ApiError
+          ? err.message
+          : 'No se pudo archivar el hábito. Intenta de nuevo.',
+      );
+    } finally {
+      setHabitToArchive(null);
     }
   }
 
@@ -101,7 +126,12 @@ export function HabitsPage() {
       {habits.length > 0 && (
         <div className={styles.list}>
           {habits.map((habit) => (
-            <HabitCard key={habit.id} habit={habit} onCheck={handleCheck} />
+            <HabitCard
+              key={habit.id}
+              habit={habit}
+              onCheck={handleCheck}
+              onArchive={(selected) => setHabitToArchive(selected)}
+            />
           ))}
         </div>
       )}
@@ -113,6 +143,20 @@ export function HabitsPage() {
           </Button>
         </div>
       )}
+
+      <ConfirmDialog
+        open={habitToArchive !== null}
+        title="¿Archivar este hábito?"
+        message={
+          habitToArchive
+            ? `«${habitToArchive.name}» dejará de aparecer en tu lista y no podrás recuperar su racha.`
+            : ''
+        }
+        confirmLabel="Archivar"
+        isBusy={archive.isPending}
+        onConfirm={confirmArchive}
+        onCancel={() => setHabitToArchive(null)}
+      />
     </main>
   );
 }
