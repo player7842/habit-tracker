@@ -3,6 +3,7 @@ import { useJustTurnedOn } from '../../hooks/useJustTurnedOn';
 import { formatTime } from '../../utils/time';
 import { CheckButton } from '../CheckButton/CheckButton';
 import { StreakBadge } from '../StreakBadge/StreakBadge';
+import { GoalProgress } from '../GoalProgress/GoalProgress';
 import styles from './HabitCard.module.css';
 
 interface HabitCardProps {
@@ -49,6 +50,9 @@ export function HabitCard({ habit, onCheck }: HabitCardProps) {
       <div className={styles.info}>
         <h3 className={styles.title}>{habit.name}</h3>
         <p className={statusClasses}>{getStatusText(habit)}</p>
+        {habit.goalDays !== null && (
+          <GoalProgress current={habit.currentStreak} goal={habit.goalDays} />
+        )}
       </div>
 
       <StreakBadge days={habit.currentStreak} />

@@ -4,6 +4,7 @@ export interface TodayHabit {
   id: string;
   name: string;
   deadlineTime: string | null;
+  goalDays: number | null;
   doneToday: boolean;
   canCheckIn: boolean;
   currentStreak: number;

@@ -1,0 +1,44 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.track {
+  flex: 1;
+  height: 10px;
+  overflow: hidden;
+  background: var(--bg);
+  border-radius: 999px;
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(0.3, 1.1, 0.5, 1);
+}
+
+.label {
+  min-width: 84px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.reached .fill {
+  background: linear-gradient(90deg, var(--streak), var(--accent));
+}
+
+.reached .label {
+  color: var(--streak);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}
