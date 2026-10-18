@@ -1,5 +1,6 @@
 import { AppError } from '../../errors/app-error';
 import {
+  archiveHabit,
   createHabit,
   findTemplateById,
   listHabitsByUser,
@@ -52,4 +53,12 @@ export async function addHabit(userId: string, input: CreateHabitInput) {
   );
 
   return toHabitResponse(habit);
+}
+
+export async function removeHabit(userId: string, habitId: string) {
+  const archived = await archiveHabit(habitId, userId);
+
+  if (!archived) {
+    throw new AppError(404, 'Hábito no encontrado');
+  }
 }

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  archiveHabit,
   createHabit,
   fetchTemplates,
   fetchToday,
@@ -59,6 +60,20 @@ export function useCreateHabitMutation() {
       return createHabit(token, input);
     },
     onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['habits', 'today'] }),
+  });
+}
+
+export function useArchiveHabitMutation() {
+  const { token } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (habitId: string) => {
+      if (!token) throw new Error('Sin sesión');
+      return archiveHabit(token, habitId);
+    },
+    onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ['habits', 'today'] }),
   });
 }

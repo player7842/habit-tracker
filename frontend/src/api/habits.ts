@@ -53,3 +53,7 @@ export function createHabit(token: string, input: NewHabitInput) {
     body: input,
   });
 }
+
+export function archiveHabit(token: string, habitId: string) {
+  return apiRequest<null>(`/habits/${habitId}`, { method: 'DELETE', token });
+}

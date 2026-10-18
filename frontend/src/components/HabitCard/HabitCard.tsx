@@ -2,13 +2,14 @@ import type { TodayHabit } from '../../api/habits';
 import { useJustTurnedOn } from '../../hooks/useJustTurnedOn';
 import { formatTime } from '../../utils/time';
 import { CheckButton } from '../CheckButton/CheckButton';
-import { StreakBadge } from '../StreakBadge/StreakBadge';
 import { GoalProgress } from '../GoalProgress/GoalProgress';
+import { StreakBadge } from '../StreakBadge/StreakBadge';
 import styles from './HabitCard.module.css';
 
 interface HabitCardProps {
   habit: TodayHabit;
   onCheck: (habitId: string) => Promise<void>;
+  onArchive: (habit: TodayHabit) => void;
 }
 
 function getStatusText(habit: TodayHabit): string {
@@ -25,7 +26,7 @@ function getStatusText(habit: TodayHabit): string {
   return 'Sin hora límite';
 }
 
-export function HabitCard({ habit, onCheck }: HabitCardProps) {
+export function HabitCard({ habit, onCheck, onArchive }: HabitCardProps) {
   const celebrating = useJustTurnedOn(habit.doneToday);
   const locked = !habit.doneToday && !habit.canCheckIn;
 
@@ -48,8 +49,25 @@ export function HabitCard({ habit, onCheck }: HabitCardProps) {
   return (
     <article className={cardClasses}>
       <div className={styles.info}>
-        <h3 className={styles.title}>{habit.name}</h3>
+        <div className={styles.titleRow}>
+          <h3 className={styles.title}>{habit.name}</h3>
+          <button
+            type="button"
+            className={styles.archive}
+            onClick={() => onArchive(habit)}
+            aria-label={`Archivar «${habit.name}»`}
+            title="Archivar hábito"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <rect width="20" height="5" x="2" y="3" rx="1" />
+              <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+              <path d="M10 12h4" />
+            </svg>
+          </button>
+        </div>
+
         <p className={statusClasses}>{getStatusText(habit)}</p>
+
         {habit.goalDays !== null && (
           <GoalProgress current={habit.currentStreak} goal={habit.goalDays} />
         )}
