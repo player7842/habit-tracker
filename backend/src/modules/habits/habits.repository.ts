@@ -63,3 +63,16 @@ export async function listHabitsByUser(userId: string): Promise<HabitRow[]> {
   );
   return result.rows;
 }
+
+export async function archiveHabit(
+  habitId: string,
+  userId: string,
+): Promise<boolean> {
+  const result = await pool.query(
+    `UPDATE habits
+     SET is_active = FALSE
+     WHERE id = $1 AND user_id = $2 AND is_active = TRUE`,
+    [habitId, userId],
+  );
+  return result.rowCount === 1;
+}
