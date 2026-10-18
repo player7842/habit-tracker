@@ -12,6 +12,7 @@ export interface HabitRow {
   template_id: string | null;
   name: string;
   deadline_time: string | null;
+  goal_days: number | null;
   created_at: Date;
 }
 
@@ -41,19 +42,20 @@ export async function createHabit(
   templateId: string | null,
   name: string,
   deadlineTime: string | null,
+  goalDays: number | null,
 ): Promise<HabitRow> {
   const result = await pool.query<HabitRow>(
-    `INSERT INTO habits (user_id, template_id, name, deadline_time)
-     VALUES ($1, $2, $3, $4)
-     RETURNING id, template_id, name, deadline_time, created_at`,
-    [userId, templateId, name, deadlineTime],
+    `INSERT INTO habits (user_id, template_id, name, deadline_time, goal_days)
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING id, template_id, name, deadline_time, goal_days, created_at`,
+    [userId, templateId, name, deadlineTime, goalDays],
   );
   return result.rows[0];
 }
 
 export async function listHabitsByUser(userId: string): Promise<HabitRow[]> {
   const result = await pool.query<HabitRow>(
-    `SELECT id, template_id, name, deadline_time, created_at
+    `SELECT id, template_id, name, deadline_time, goal_days, created_at
      FROM habits
      WHERE user_id = $1 AND is_active = TRUE
      ORDER BY created_at`,

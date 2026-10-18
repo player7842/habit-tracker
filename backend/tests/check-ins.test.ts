@@ -89,7 +89,7 @@ describe('check-ins', () => {
   
   it('devuelve el resumen de hoy con estado y racha de cada hábito', async () => {
     const token = await createUserAndLogin();
-    const readingId = await createHabit(token, { name: 'Leer' });
+    const readingId = await createHabit(token, { name: 'Leer', goalDays: 7 });
     await createHabit(token, { name: 'Madrugar', deadlineTime: '00:00' });
 
     await request(app)
@@ -112,11 +112,13 @@ describe('check-ins', () => {
       doneToday: true,
       canCheckIn: false,
       currentStreak: 1,
+      goalDays: 7,
     });
     expect(early).toMatchObject({
       doneToday: false,
       canCheckIn: false,
       currentStreak: 0,
+      goalDays: null,
     });
   });
 });

@@ -93,6 +93,7 @@ export async function getTodayOverview(userId: string) {
         deadlineTime: habit.deadline_time
           ? habit.deadline_time.slice(0, 5)
           : null,
+        goalDays: habit.goal_days,
         doneToday,
         canCheckIn: !doneToday && !habit.past_deadline,
         currentStreak: calculateCurrentStreak(doneDates, today),
