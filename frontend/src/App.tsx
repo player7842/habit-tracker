@@ -4,6 +4,7 @@ import { ProtectedRoute, PublicOnlyRoute } from './components/RouteGuards';
 import { AuthProvider } from './features/auth/AuthProvider';
 import { HabitsPage } from './pages/HabitsPage';
 import { LoginPage } from './pages/LoginPage';
+import { NewHabitPage } from './pages/NewHabitPage';
 import { RegisterPage } from './pages/RegisterPage';
 
 const queryClient = new QueryClient({
@@ -25,6 +26,7 @@ export default function App() {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<HabitsPage />} />
+              <Route path="/habits/new" element={<NewHabitPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
