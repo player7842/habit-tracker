@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { ApiError } from '../api/client';
 import { Button } from '../components/Button/Button';
 import { HabitCard } from '../components/HabitCard/HabitCard';
@@ -8,6 +9,7 @@ import { formatLongDate } from '../utils/time';
 import styles from './HabitsPage.module.css';
 
 export function HabitsPage() {
+  const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { data, isPending, isError, error, refetch } = useTodayQuery();
   const checkIn = useCheckInMutation();
@@ -89,7 +91,10 @@ export function HabitsPage() {
       {data && habits.length === 0 && (
         <div className={styles.message}>
           <p className={styles.messageTitle}>Aún no tienes hábitos</p>
-          <p>Aquí aparecerán los hábitos de tu día.</p>
+          <p>Elige uno del catálogo y empieza tu primera racha.</p>
+          <Button onClick={() => navigate('/habits/new')}>
+            Agregar mi primer hábito
+          </Button>
         </div>
       )}
 
@@ -98,6 +103,14 @@ export function HabitsPage() {
           {habits.map((habit) => (
             <HabitCard key={habit.id} habit={habit} onCheck={handleCheck} />
           ))}
+        </div>
+      )}
+
+      {habits.length > 0 && (
+        <div className={styles.add}>
+          <Button fullWidth onClick={() => navigate('/habits/new')}>
+            Nuevo hábito
+          </Button>
         </div>
       )}
     </main>
